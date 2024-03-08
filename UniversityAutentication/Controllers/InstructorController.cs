@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UniversityAutentication.Data;
 using UniversityAutentication.Models;
+using UniversityAutentication.ViewModels;
 
 namespace UniversityAutentication.Controllers
 {
@@ -52,7 +54,7 @@ namespace UniversityAutentication.Controllers
             var instructores = await _db.Instructors.ToListAsync();
             return View(instructores);  
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult AddProfile()
         {
 
@@ -73,7 +75,7 @@ namespace UniversityAutentication.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditProfile(int id)
         {
             var instructorToUpdate=await _db.Instructors.FirstOrDefaultAsync(i=>i.InstructorId == id);
@@ -90,6 +92,46 @@ namespace UniversityAutentication.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction("AllProfiles");
         }
+
+
+        [Authorize(Roles ="Admin")]
+
+        public async Task<IActionResult> AddCourse()
+        {
+            var instructorDisplay=await _db.Instructors.Select(x=> new
+            {
+
+                Id=x.InstructorId,
+                Value=x.InstructorName
+
+            }).ToListAsync();
+
+            InstructorAddCourseViewModel vm = new InstructorAddCourseViewModel();
+
+            vm.InstructorSelecList = new SelectList(instructorDisplay, "Id", "Value");
+
+            return View(vm);
+        }
+
+
+
+        [HttpPost]
+
+        public async Task<IActionResult> AddCourse(InstructorAddCourseViewModel vm)
+        {
+
+            var instructor = await _db.Instructors.FirstOrDefaultAsync(i => i.InstructorId == vm.Instructor.InstructorId);
+
+            vm.Course.Instructor= instructor;
+            _db.Add(vm.Course);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index","Instructor");
+        }
+
+
+   
+
+
 
     }
 }

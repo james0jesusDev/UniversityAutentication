@@ -1,0 +1,26 @@
+﻿@using UniversityAutentication.Models
+@model Student
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-7 offset-3">
+            <h2>Instructor Profile</h2>
+            <form asp-action="EditProfile">
+                <input type="hidden" asp-for="StudentId" />
+                <div class="form-group">
+                    <label asp-for="StudentName"></label>
+                    <input asp-for="StudentName" class="form-control" />
+                </div>
+             
+                <div class="form-group">
+                    <label asp-for="StudentUser"></label>
+                    <input asp-for="StudentUser" class="form-control" readonly="readonly" />
+                </div>
+                <br />
+                <div class="text-center">
+                    <button type="submit">Save and Back to student               home</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

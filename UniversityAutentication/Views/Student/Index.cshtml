@@ -1,0 +1,41 @@
+﻿<div class="container">
+    <div class="row">
+
+        <div class="col-md-7 offset-3">
+
+            <h2>Student Home</h2>
+
+            @{
+
+                if ((bool)ViewData["Registrado"])
+                {
+
+                    <p>
+                        <a asp-action="EditProfile" asp-route-id="@ViewBag.StudentId"
+                           class="btn btn-light">Edit Student</a>
+                    </p>
+                }
+                else
+                {
+
+                    <p>
+
+                        <a asp-action="AddProfile" class="btn btn-light">Add Profile</a>
+
+                    </p>
+                }
+
+
+            }
+
+
+            <p><a asp-action="EnrollCourse" class="btn btn-light">Enroll in a course</a></p>
+            <p><a asp-action="CheckGrade" class="btn btn-light">Check a grade</a></p>
+            <p><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index","Home", new {area=""})">Logout</a></p>
+           
+        </div>
+
+
+    </div>
+
+</div>
