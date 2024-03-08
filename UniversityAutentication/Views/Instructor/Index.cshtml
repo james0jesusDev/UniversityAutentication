@@ -1,0 +1,36 @@
+﻿<div class="container">
+    <div class="row">
+
+        <div class="col-md-7 offset-3">
+
+            <h2>Instructor Home</h2>
+
+            @{
+
+                if((bool)ViewData["Registrado"]){
+
+                    <p>
+                    <a asp-action="EditProfile" asp-route-id="@ViewBag.InstructorId" 
+                    class="btn btn-light" >Edit Profile</a></p>
+                }else{
+
+                    <p>
+                    
+                    <a asp-action="AddProfile" class="btn btn-light">Add Profile</a>
+                    
+                    </p>
+                }
+
+
+            }
+
+
+            <p><a asp-action="AllProfiles" class="btn btn-dark">Instructor List</a></p>
+
+
+        </div>
+
+
+    </div>
+
+</div>

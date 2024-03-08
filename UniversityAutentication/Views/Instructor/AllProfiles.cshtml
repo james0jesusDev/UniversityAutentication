@@ -1,0 +1,48 @@
+﻿@using UniversityAutentication.Models
+@model IEnumerable<Instructor>
+
+@{
+    ViewData["Title"] = "AllProfiles";
+}
+
+<p><a asp-action="AddProfile" class="btn btn-primary">Agregar un profile</a></p>
+
+@if (!Model.Any())
+{
+    <p>No hay perfiles en la base de datos aún</p>
+}
+else
+{
+    <h3>Todos los perfiles</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Ubicación de la Oficina</th>
+                    <th>InstructorUser</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var instructor in Model)
+                {
+                    <tr>
+                        <td>@instructor.InstructorId</td>
+                        <td>@instructor.InstructorName</td>
+                        <td>@instructor.OfficeLocation</td>
+                        <td>@instructor.InstructorUser</td>
+                        <td>
+                            <a asp-controller="Instructor" asp-action="EditProfile"
+                               asp-route-id="@instructor.InstructorId">Edit</a>
+
+                        </td>
+                    </tr>
+                   
+
+                }
+            </tbody>
+        </table>
+    </div>
+}
