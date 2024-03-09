@@ -123,57 +123,51 @@ namespace UniversityAutentication.Controllers
 
         public async Task<IActionResult> EnrollCourse(StudentAddEnrollmentViewModels vm)
         {
+            //Curso
+            Course? course = _db.Courses.
+                Where(c => c.CourseId == vm.Course.CourseId).
+                Include(c => c.Instructor).FirstOrDefault();
+
+            //Student
+            Student? student = _db.Students.
+                Where(s => s.StudentId == vm.Student.StudentId).FirstOrDefault();
 
 
-            //Curso 
-            Course? course = _db.Courses.Where(c=>c.CourseId== vm.Course.CourseId).Include(c=>c.Instructor).FirstOrDefault();
-            //Sudent
-            Student? student = _db.Students.Where(c => c.StudentId == vm.Student.StudentId).Include(c => c.StudentId).FirstOrDefault();
-
-            //Comprobar si ya matriculado 
-            Enrollment? yaMatriculado= _db.Enrollments.Where(e=>e.Student==student&& e.Course==course ).FirstOrDefault();
-            if(yaMatriculado != null)
+            //Comprobar si ya matriculado
+            Enrollment? yaMatriculado = _db.Enrollments.
+                Where(e => e.Student == student && e.Course == course).FirstOrDefault();
+            if (yaMatriculado != null)
             {
-
-                //Mostrar vista matriculado
-
-
+                //Mostrar una vista de ya matriculado
             }
             else
             {
-
                 if (course.SeatCapacity > 0)
                 {
                     Enrollment enrollment = new Enrollment();
 
-                    enrollment.Course=course;
-                    enrollment.Student=student;
+                    enrollment.Course = course;
+                    enrollment.Student = student;
                     _db.Add(enrollment);
 
-
-                    //decrementamos el numero de plazas 
-
+                    //decrementamos el numero de plazas
                     course.SeatCapacity--;
                     await _db.SaveChangesAsync();
                 }
                 else
                 {
-                    //Mostrar  un div con el numero de plazas
+                    //Mostrar un div con el numero de plazas
                 }
-
-
             }
-
-
-            // redireccionar al index
             return RedirectToAction("Index");
 
+            //Comprobar si hay plazas, si hay matricular y descontar el numero
 
-
+            //Redireccionar al Index
         }
 
 
-        
+
 
 
 
