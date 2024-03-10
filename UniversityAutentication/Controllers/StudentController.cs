@@ -93,7 +93,7 @@ namespace UniversityAutentication.Controllers
 
 
 
-        public async Task<IActionResult> EnrollCourse()
+        public async Task<IActionResult> EnrollCourse() 
         {
 
             var currentUserId = User.Identity.Name;
@@ -113,7 +113,8 @@ namespace UniversityAutentication.Controllers
             StudentAddEnrollmentViewModels vm = new StudentAddEnrollmentViewModels();
 
             vm.CourseList = new SelectList(courseDisplay, "Id", "Value");
-
+            //cambio sale el nombre 
+            vm.Student=studentToShow;
             return View(vm);
 
         }
@@ -165,8 +166,6 @@ namespace UniversityAutentication.Controllers
 
             //Redireccionar al Index
         }
-
-
 
 
 
