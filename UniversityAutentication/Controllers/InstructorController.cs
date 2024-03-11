@@ -129,7 +129,20 @@ namespace UniversityAutentication.Controllers
         }
 
 
-   
+        public async Task<IActionResult> GradeCourse()
+        {
+            var currentUserId = User.Identity.Name;
+            Instructor instructorToShow = await _db.Instructors.Where(i=>i.InstructorUser == currentUserId).FirstOrDefaultAsync();  
+      
+
+
+            if(instructorToShow != null)
+            {
+
+                List<Course> listaCursosInstructor = await _db.Courses.Where(c=>c.Instructor.InstructorId == instructorToShow.InstructorId).ToListAsync (); 
+            }
+        
+        }
 
 
 

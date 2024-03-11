@@ -6,122 +6,79 @@ using UniversityAutentication.Data;
 using UniversityAutentication.Models;
 using UniversityAutentication.ViewModels;
 
-namespace UniversityAutentication.Controllers
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace UniversityAuthentication.Controllers
 {
     [Authorize(Roles = "Student")]
-
     public class StudentController : Controller
     {
-
-
         private readonly ApplicationDbContext _db;
-
         public StudentController(ApplicationDbContext db)
         {
             _db = db;
         }
-
-
-
         public async Task<IActionResult> Index()
         {
             ViewData["Registrado"] = false;
+
             if (User.Identity.Name != null)
             {
-                //Esta en la tabla de usuarios 
-
-                //ahora miramos si esta tambien en la de instructores 
-
+                //Esta en la tabla de usuarios
+                //Comprobamos si esta en la tabla de Students
                 var student = await _db.Students.FirstOrDefaultAsync(i => i.StudentUser == User.Identity.Name);
                 if (student != null)
                 {
-
-                    //Existe en la de instructors tambien 
+                    //Existe este Student
                     ViewBag.StudentId = student.StudentId;
                     ViewData["Registrado"] = true;
-
-
                 }
-
-
             }
             return View();
         }
-
         [Authorize(Roles = "Student")]
-        public IActionResult AddProfile()
+        public ActionResult AddProfile()
         {
-
             var currentUserId = User.Identity.Name;
             Student student = new Student();
-            student.StudentUser=currentUserId;
-
+            student.StudentUser = currentUserId;
             return View(student);
-
         }
-
-
-
         [HttpPost]
-
         public async Task<IActionResult> AddProfile(Student student)
         {
-
             _db.Add(student);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-
-
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> EditProfile(int id)
         {
-            var instructorToUpdate = await _db.Students.FirstOrDefaultAsync(i => i.StudentId == id);
-
-            return View(instructorToUpdate);
+            var studentToUpadate = await _db.Students.FirstOrDefaultAsync(i => i.StudentId == id);
+            return View(studentToUpadate);
         }
-
-
         [HttpPost]
-
         public async Task<IActionResult> EditProfile(Student student)
         {
             _db.Update(student);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-
-
-
-        public async Task<IActionResult> EnrollCourse() 
+        [HttpGet]
+        public async Task<IActionResult> EnrollCourse()
         {
-
             var currentUserId = User.Identity.Name;
-
-            Student studentToShow = await _db.Students.Where(s=>s.StudentUser == currentUserId).FirstOrDefaultAsync();
-
-
-            var courseDisplay = await _db.Courses.Select(x=> new
+            Student studentToShow = await _db.Students.Where(s => s.StudentUser == currentUserId).FirstOrDefaultAsync();
+            var courseDisplay = await _db.Courses.Select(x => new
             {
-
-                Id=x.CourseId,
-                Value=x.CourseTitle
-
-
+                Id = x.CourseId,
+                Value = x.CourseTitle
             }).ToListAsync();
-
             StudentAddEnrollmentViewModels vm = new StudentAddEnrollmentViewModels();
-
             vm.CourseList = new SelectList(courseDisplay, "Id", "Value");
-            //cambio sale el nombre 
-            vm.Student=studentToShow;
+            vm.Student = studentToShow;
             return View(vm);
-
         }
-
-
-        [HttpPost]
-
         public async Task<IActionResult> EnrollCourse(StudentAddEnrollmentViewModels vm)
         {
             //Curso
@@ -169,38 +126,28 @@ namespace UniversityAutentication.Controllers
 
 
 
-
-
-        public int DevuelveCapacidad (int dato)
+        private async Task<bool> Comprueba(int courseId, int studentId)
         {
+            bool encontrado;
+            var enrollment = await _db.Enrollments.Where(e => e.Course.CourseId == courseId &&
+            e.Student.StudentId == studentId).FirstOrDefaultAsync();
 
-         Course? course = _db.Courses.Where(c=>c.CourseId == dato).FirstOrDefault();
+            encontrado = enrollment != null;
+            return encontrado;
+        }
 
-            
-            if(course != null)
+        public int DevuelveCapacidad(int dato)
+        {
+            Course? course = _db.Courses.Where(c => c.CourseId == dato).FirstOrDefault();
+            if (course != null)
             {
-
                 return course.SeatCapacity;
-
-
             }
             else
             {
                 return 0;
             }
-
-
-
-
         }
-
-
-
-
-
-
 
     }
 }
-
-
