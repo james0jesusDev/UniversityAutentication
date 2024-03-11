@@ -1,0 +1,19 @@
+﻿﻿@using UniversityAutentication.ViewModels
+@model InstructorGradeCourseViewModel
+
+<div class="container">
+    <div class="row">
+        <h2>Instructor: @Model.Instructor.InstructorName</h2>
+        <div class="form-group">
+            <label asp-for="Course.CourseTitle"></label>
+            <select id="cmbCursoInstructor" asp-for="Course.CourseId" asp-items="@Model.CourseList" class="form-control">
+                <option></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <table class="table table-striped" id="tableStudent">
+            </table>
+        </div>
+        <p><a asp-action="Index">Back to instructor home</a></p>
+    </div>
+</div>

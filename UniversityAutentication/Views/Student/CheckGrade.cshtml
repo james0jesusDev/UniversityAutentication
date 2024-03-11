@@ -1,0 +1,30 @@
+﻿@using UniversityAutentication.Models
+@model List<Enrollment>
+
+<div class="container">
+    <div class="row">
+        <h3>Student: @ViewBag.Student.StudentName</h3>
+        <table class="table table-striped">
+            <tr><th>Course Name</th><th>Letter</th></tr>
+            @{
+                foreach (var enrollment in Model)
+                {
+                    <tr>
+                        <td>@enrollment.Course.CourseTitle</td>
+                        @{
+                            if (enrollment.LetterGrade == null)
+                            {
+                                <td>Sin calificar aun</td>
+                            }
+                            else
+                            {
+                                <td>@Convert.ToChar(enrollment.LetterGrade)</td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </table>
+        <p><a asp-action="Index" class="btn btn-secondary">Return</a></p>
+    </div>
+</div>

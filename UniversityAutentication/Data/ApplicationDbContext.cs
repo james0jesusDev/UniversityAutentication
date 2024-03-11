@@ -24,5 +24,15 @@ namespace UniversityAutentication.Data
         {
 
         }
+
+
+
+        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        {
+
+            modelbuilder.Seed();
+            base.OnModelCreating(modelbuilder);
+        }
+
     }
 }

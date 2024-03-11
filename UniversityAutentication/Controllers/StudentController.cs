@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using UniversityAutentication.Data;
 using UniversityAutentication.Models;
 using UniversityAutentication.ViewModels;
-
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UniversityAuthentication.Controllers
@@ -146,6 +145,24 @@ namespace UniversityAuthentication.Controllers
             else
             {
                 return 0;
+            }
+        }
+
+        public async Task<IActionResult> CheckGrade()
+        {
+            var currentUserId = User.Identity.Name;
+            Student studentToShow = await _db.Students.Where(s => s.StudentUser == currentUserId).FirstOrDefaultAsync();
+
+            List<Enrollment> enrollments = await _db.Enrollments.Include(e => e.Course)
+                .Where(e => e.Student == studentToShow).ToListAsync();
+            if (enrollments.Count > 0)
+            {
+                ViewBag.Student = studentToShow;
+                return View(enrollments);
+            }
+            else
+            {
+                return RedirectToAction("Index");
             }
         }
 
